@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <title>验证码生成示例</title>
+  <!--<link rel="stylesheet" href="../allcss/mui/mui.min.css" />-->
+  <style>
+    /*验证码*/
+    .verificationCode{
+      /*width: 4rem;*/
+      /*height: 100%;*/
+      position: absolute;
+      left: 0;
+    }
+    canvas{
+      width: 100%;
+      height: 100%;
+    }
+    #code_img {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      vertical-align: top;
+    }
+    .city-choose{
+      margin: 100px;
+    }
+  </style>
+</head>
+<body>
+<div class="mui-content">
+  <div class="mui-input-row login_input">
+    <label>验证码</label>
+    <input type="text" id="verifital_input" class="mui-input" placeholder="请输入验证码">
+    <div id="verificationCode" class="verificationCode">
+      <canvas width="100" height="40" id="verifyCanvas"></canvas>
+      <img id="code_img">
+    </div>
+  </div>
+  <div class="city-choose">
+    <form action="">
+      <label>地区：</label>
+      <select name="provinces" id="provinces"></select>
+      <select name="citys" id="citys"></select>
+      <select name="areas" id="areas"></select>
+    </form>
+  </div>
+</div>
+</body>
+<!--<script type="text/javascript" src="../js/mui/mui.js" ></script>-->
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.min.js" ></script>
+<script type="text/javascript" src="test.js" ></script>
+<script>
+  console.log(verVal);
+  var myCityPicker = {
+    init:function (data) {
+      this.citys = data;
+      this.setProvince(this.citys);
+      this.setCitys(this.citys,0);
+      this.setAreas(this.citys,0,0);
+
+      //改变省
+      $("#provinces").on("change",function () {
+        this.setCitys(citys,$("#provinces").val());
+        this.setAreas(citys,$("#provinces").val(),0);
+      }.bind(this));
+      //改变市
+      $("#citys").on("change",function () {
+        this.setAreas(citys,$("#provinces").val(),$("#citys").val());
+      }.bind(this));
+    },
+    setProvince:function (data) {
+      var provinceHtml = "";
+      for (var i = 0,len = data.length;i< len ;i++){
+        provinceHtml += '<option value="'+i+'">'+data[i].province+'</option>'
+      }
+      $("#provinces").html(provinceHtml);
+    },
+    setCitys:function (data,n) {
+      var citysHtml = "";
+      for (var j = 0;j<data[n].citys.length;j++) {
+        citysHtml += '<option value="'+j+'">'+data[n].citys[j].name+'</option>'
+      }
+      $("#citys").html(citysHtml);
+    },
+    setAreas:function (data,n,m) {
+      var areasHtml = "";
+      for (var k = 0;k<data[n].citys[m].areas.length;k++) {
+        areasHtml += '<option value="'+k+'">'+data[n].citys[m].areas[k]+'</option>'
+      }
+      $("#areas").html(areasHtml);
+    }
+  };
+  //地区选择
+  var citys = [
+    {
+      province:'广东省',
+      citys:[
+        {
+          name:"深圳市",
+          areas:["龙华新区","福田","罗湖","南山","宝安"]
+        },
+        {
+          name:"广州市",
+          areas:["越秀区","荔湾区","海珠区","天河区","白云区"]
+        },
+        {
+          name:"珠海市",
+          areas:["狮山街道","翠香街道","拱北街道","吉大街道","梅华街道"]
+        }
+      ]
+    },
+    {
+      province:'广西省',
+      citys:[
+        {
+          name:"南宁市",
+          areas:["青秀区","兴宁区","西乡塘区","江南区","良庆区","邕宁区","武鸣区","隆安县","马山县","上林县","宾阳县","横县"]
+        },
+        {
+          name:"柳州市",
+          areas:["柳北区","柳南区","柳江区","城中区","鱼峰区","鹿寨县","柳城县","融安县","融水苗族自治县","三江侗族自治县"]
+        },
+        {
+          name:"桂林市",
+          areas:["象山区","秀峰区","叠彩区","七星区","雁山区","临桂区","阳朔县","灵川县","全州县","平乐县","兴安县","灌阳县","荔浦县","资源县","永福县","龙胜各族自治县","恭城瑶族自治县"]
+        }
+      ]
+    },
+    {
+      province:'广西省2',
+      citys:[
+        {
+          name:"南宁市2",
+          areas:["青秀区2","兴宁区","西乡塘区","江南区","良庆区","邕宁区","武鸣区","隆安县","马山县","上林县","宾阳县","横县"]
+        },
+        {
+          name:"柳州市2",
+          areas:["柳北区2","柳南区","柳江区","城中区","鱼峰区","鹿寨县","柳城县","融安县","融水苗族自治县","三江侗族自治县"]
+        },
+        {
+          name:"桂林市2",
+          areas:["象山区2","秀峰区","叠彩区","七星区","雁山区","临桂区","阳朔县","灵川县","全州县","平乐县","兴安县","灌阳县","荔浦县","资源县","永福县","龙胜各族自治县","恭城瑶族自治县"]
+        }
+      ]
+    },
+    {
+      province:'广西省3',
+      citys:[
+        {
+          name:"南宁市3",
+          areas:["青秀区3","兴宁区","西乡塘区","江南区","良庆区","邕宁区","武鸣区","隆安县","马山县","上林县","宾阳县","横县"]
+        },
+        {
+          name:"柳州市3",
+          areas:["柳北区3","柳南区","柳江区","城中区","鱼峰区","鹿寨县","柳城县","融安县","融水苗族自治县","三江侗族自治县"]
+        },
+        {
+          name:"桂林市3",
+          areas:["象山区3","秀峰区","叠彩区","七星区","雁山区","临桂区","阳朔县","灵川县","全州县","平乐县","兴安县","灌阳县","荔浦县","资源县","永福县","龙胜各族自治县","恭城瑶族自治县"]
+        }
+      ]
+    }
+  ];
+  myCityPicker.init(citys);
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
